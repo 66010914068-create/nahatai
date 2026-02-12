@@ -45,7 +45,7 @@ h1{
 <option value="">-- เลือกภาค --</option>
 
 <?php
-include "connectDB.php";
+include "connectdb.php";
 
 $sql = "SELECT * FROM regions ORDER BY r_name ASC";
 $rs = mysqli_query($conn,$sql);
@@ -71,8 +71,6 @@ while($row = mysqli_fetch_assoc($rs)){
 <hr>
 
 <?php
-// ================== บันทึกข้อมูล ==================
-
 if(isset($_POST['save'])){
 
     $pname = $_POST['pname'];
@@ -93,8 +91,6 @@ if(isset($_POST['save'])){
     if(mysqli_query($conn,$sql)){
 
         $pid = mysqli_insert_id($conn);
-
-        // ย้ายไฟล์
         move_uploaded_file(
             $file['tmp_name'],
             "images/$pid.$ext"
@@ -108,9 +104,6 @@ if(isset($_POST['save'])){
 
 }
 ?>
-
-<!-- ================= ตาราง ================= -->
-
 <table>
 
 <tr>
@@ -119,18 +112,21 @@ if(isset($_POST['save'])){
     <th>รูปภาพ</th>
     <th>ภาค</th>
 </tr>
-
-<?php
-
-$sql = "SELECT * FROM provinces p
-        INNER JOIN regions r
-        ON p.r_id = r.r_id
-        ORDER BY p.p_id ASC";
-
-$rs = mysqli_query($conn,$sql);
-
-while($row = mysqli_fetch_assoc($rs)){
-?>
+<select name="rid" required>
+    <option value="">-- เลือกภาค --</option>
+    <?php
+    include "connectdb.php"; 
+    $sql = "SELECT * FROM regions ORDER BY r_name ASC";
+    $rs = mysqli_query($conn, $sql);
+    if (!$rs) {
+        echo "<option value=''>เกิดข้อผิดพลาด: " . mysqli_error($conn) . "</option>";
+    } else {
+        while($row = mysqli_fetch_assoc($rs)){
+            echo "<option value='{$row['r_id']}'>{$row['r_name']}</option>";
+        }
+    }
+    ?>
+</select>
 
 <tr>
 
@@ -152,3 +148,4 @@ while($row = mysqli_fetch_assoc($rs)){
 
 </body>
 </html>
+
