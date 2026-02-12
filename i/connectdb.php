@@ -1,22 +1,17 @@
-<!doctype html>
-<html>
-<head>
-<meta charset="utf-8">
-<title>ณหทัย โกสิลา(ออม)</title>
-</head>
-
-<body>
-
-
 <?php
 $host = "localhost";
-    $user = "root";
-    $pwd = "Natcha12345";
-    $db = "4068db";
-    $conn = mysqli_connect($host,$user,$pwd,$db) or die ("เชื่อมต่อฐานข้อมูลไม่ได้");
-    mysqli_query($conn,"SET NAMES utf8");
+$user = "root";
+$pass = "";
+$db   = "4068db";
+
+$conn = mysqli_connect($host, $user, $pass, $db);
+
+if (!$conn) {
+    die("Connection failed: " . mysqli_connect_error());
+}
+
+// *** เพิ่ม 3 บรรทัดนี้เพื่อล้างปัญหา Collation และภาษาไทย ***
+mysqli_set_charset($conn, "utf8mb4");
+mysqli_query($conn, "SET NAMES utf8mb4");
+mysqli_query($conn, "SET character_set_connection=utf8mb4");
 ?>
-
-</body>
-
-</html>
