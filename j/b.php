@@ -55,26 +55,47 @@ h1{
 
 <?php
     if(isset($_POST['Submit'])){
-        include_once("connectDB.php");
-        
-        $pname = $_POST['pname'];
-        $rid = $_POST['rid'];
-        
-        // หาขามสกุลไฟล์
-        $ext = pathinfo($_FILES['pimage']['name'], PATHINFO_EXTENSION);
-        
-        // 1. แก้ไข SQL Insert: เรียงตัวแปรให้ตรงกับชื่อฟิลด์ (เอา $rid มาก่อน $ext)
-        $sql_insert = "INSERT INTO provinces (p_id, p_name, r_id, p_ext) VALUES (NULL, '$pname', '$rid', '$ext')";
-        if(mysqli_query($conn, $sql_insert)){
-            $last_id = mysqli_insert_id($conn);
-            $file_name = $last_id . "." . $ext;
-            copy($_FILES['pimage']['tmp_name'], "images/" . $file_name);
-            
-            echo "<script>alert('เพิ่มข้อมูลสำเร็จ'); window.location.href=window.location.href;</script>";
-        } else {
-            echo "Insert ไม่ได้: " . mysqli_error($conn);
-        }
+
+    include_once("connectDB.php");
+
+    $pname = $_POST['pname'];
+    $rid   = $_POST['rid'];
+
+    $ext = strtolower(pathinfo($_FILES['pimage']['name'], PATHINFO_EXTENSION));
+
+    // อนุญาตเฉพาะไฟล์รูป
+    $allow = ['jpg','jpeg','png','gif','webp'];
+
+    if(!in_array($ext,$allow)){
+        echo "ไฟล์ไม่ใช่รูปภาพ";
+        exit();
     }
+
+    // insert ก่อน
+    $sql = "INSERT INTO provinces (p_name,r_id,p_ext)
+            VALUES ('$pname','$rid','$ext')";
+
+    if(mysqli_query($conn,$sql)){
+
+        $last_id = mysqli_insert_id($conn);
+
+        $newname = $last_id.".".$ext;
+
+        move_uploaded_file(
+            $_FILES['pimage']['tmp_name'],
+            "images/".$newname
+        );
+
+       echo "<script>
+alert('บันทึกสำเร็จ');
+window.location='b.php';
+</script>";
+
+    }else{
+        echo mysqli_error($conn);
+    }
+}
+
 ?>
 
 <br><hr><br>
@@ -87,13 +108,17 @@ h1{
         <th>ภาค</th>
     </tr>
 <?php
-    $sql = "SELECT * FROM `provinces` ORDER BY `r_id` ASC p
-            INNER JOIN regions AS r ON p.r_id = r.r_id
-            ORDER BY p.p_id ASC";
-    $rs = mysqli_query($conn , $sql); 
+$sql = "SELECT p.*, r.r_name
+        FROM provinces AS p
+        INNER JOIN regions AS r
+        ON p.r_id = r.r_id
+        ORDER BY p.p_id ASC";
 
-    while($data = mysqli_fetch_array($rs)){
+$rs = mysqli_query($conn , $sql); 
+
+while($data = mysqli_fetch_assoc($rs)){
 ?>
+
     <tr>
         <td><?php echo $data['p_id'];?></td>
         <td><?php echo $data['p_name'];?></td>

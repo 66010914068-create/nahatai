@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.1
+-- version 5.0.4deb2+deb11u2
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: Feb 11, 2026 at 04:42 PM
--- Server version: 10.4.32-MariaDB
--- PHP Version: 8.2.12
+-- Host: localhost:3306
+-- Generation Time: Feb 18, 2026 at 06:05 PM
+-- Server version: 10.5.29-MariaDB-0+deb11u1
+-- PHP Version: 7.4.33
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `4068db`
+-- Database: `4066db`
 --
 
 -- --------------------------------------------------------
@@ -28,8 +28,8 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `regions` (
-  `r_id` int(20) NOT NULL,
-  `r_name` varchar(255) NOT NULL
+  `r_id` int(4) NOT NULL,
+  `r_name` varchar(200) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -38,7 +38,11 @@ CREATE TABLE `regions` (
 
 INSERT INTO `regions` (`r_id`, `r_name`) VALUES
 (1, 'ภาคเหนือ'),
-(2, 'ภาคตะวันออกเฉียงเหนือ(อีสาน)');
+(2, 'ภาคตะวันออกเฉียงเหนือ(อีสาน)'),
+(3, 'ภาคกลาง'),
+(4, 'ภาคใต้'),
+(5, 'ภาคตะวันออก'),
+(6, 'ภาคตะวันตก');
 
 --
 -- Indexes for dumped tables
@@ -58,7 +62,7 @@ ALTER TABLE `regions`
 -- AUTO_INCREMENT for table `regions`
 --
 ALTER TABLE `regions`
-  MODIFY `r_id` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `r_id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
